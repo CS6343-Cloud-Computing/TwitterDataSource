@@ -8,5 +8,5 @@ services:
         image: "twitterds:latest"
         networks:
           - netflow
-        links:
-          - kafkaserv
+        enviroment:
+            KafkaServer: "http://kafkaserv:9092"
