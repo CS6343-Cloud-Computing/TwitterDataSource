@@ -1,0 +1,12 @@
+version:  "3.5"
+
+networks:
+    netflow:
+        external: true
+services:
+    twitterdscont:
+        image: "twitterds:latest"
+        networks:
+          - netflow
+        links:
+          - kafkaserv
