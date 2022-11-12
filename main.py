@@ -7,9 +7,9 @@ from kafka import KafkaConsumer, KafkaProducer
 from kafka.structs import TopicPartition
 from api_developer_authentication import api_developer_authentication
 import os
-import DBConnect
+import sys
 
-KafkaServer = sys.argv[1]
+KafkaServer = os.getenv("kafkaserver")
 
 auth_kay_val = api_developer_authentication()
 consumer_key = auth_kay_val.consumer_key_val()
@@ -24,7 +24,7 @@ polling_interval = auth_kay_val.polling_time_interval()
 client = tweepy.Client(bearer_token)
 counter = 0
 lastTweet = 0
-query = '#Ukraine'
+query = os.getenv("query")
 call_controller = 0
 
 
@@ -40,7 +40,7 @@ while True:
 					counter+=1
 				else:
 					tweet_id = str(tweet.id)
-					producer.send("wfm-input",  key = tweet_id.encode('utf-8'), value = str(tweet.text).encode('utf-8'),partition=0, headers=[('workflow',int(sys.argv[2]).encode())])
+					producer.send("wfm-input",  key = tweet_id.encode('utf-8'), value = str(tweet.text).encode('utf-8'),partition=0, headers=[('workflow',os.getenv("workflow").encode())])
 		else:
 			for tweet in tweepy.Paginator(client.search_recent_tweets,since_id = lastTweet, query=query, max_results = 10).flatten(limit = 200):
 				if(counter == 0):
@@ -48,6 +48,6 @@ while True:
 					counter+=1
 				else:
 					tweet_id = str(tweet.id)
-					producer.send("wfm-input",  key = tweet_id.encode('utf-8'), value = str(tweet.text).encode('utf-8'),partition=0, headers=[('workflow',int(sys.argv[2]).encode())])
+					producer.send("wfm-input",  key = tweet_id.encode('utf-8'), value = str(tweet.text).encode('utf-8'),partition=0, headers=[('workflow',os.getenv("workflow").encode())])
 		producer.flush()
 	time.sleep(1)	
