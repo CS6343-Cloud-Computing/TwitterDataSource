@@ -50,5 +50,4 @@ while True:
 					tweet_id = str(tweet.id)
 					producer.send("wfm-input",  key = tweet_id.encode('utf-8'), value = str(tweet.text).encode('utf-8'),partition=0, headers=[('workflow',int(sys.argv[2]).encode())])
 		producer.flush()
-	time.sleep(1)
-			# time.sleep(polling_interval)
+	time.sleep(1)	
